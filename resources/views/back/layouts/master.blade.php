@@ -11,8 +11,11 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{{asset('assets/img/apple-touch-icon.png')}}">
     <link rel="icon" type="image/png" href="{{asset('assets/img/favicon.png')}}" sizes="32x32">
     <link rel="shortcut icon" href="{{asset('assets/img/favicon.png')}}">
+    
 </head>
 <body>
+    
+    @include('sweetalert::alert')
 
     <!-- loader -->
     {{-- @include('back.layouts.loader') --}}
@@ -25,7 +28,7 @@
 
     <!-- App Capsule -->
     <div id="appCapsule">
-
+        
         @yield('content')
 
     </div>
@@ -49,6 +52,6 @@
     <script src="{{asset('assets/js/plugins/owl-carousel/owl.carousel.min.js')}}"></script>
     <!-- Base Js File -->
     <script src="{{asset('assets/js/base.js')}}"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </body>
 </html>

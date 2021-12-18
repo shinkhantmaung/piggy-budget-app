@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Transaction;
 use Carbon\Carbon;
 
@@ -15,42 +16,17 @@ class TranscationController extends Controller
      */
     public function index()
     {
+
         $title = "Transactions";
-        $today = Carbon::now()->format('Y-m-d');
-        $transactions = Transaction::where('user_id','=',auth()->user()->id)->get();
-        $sorted = $transactions->sortBy([
-            ['created_at', 'desc'],
-        ]);
-        
-        $sorted->values()->all();
+        $today = Carbon::today()->format('Y-m-d');
+        $yesterday = Carbon::yesterday()->format('Y-m-d');
 
-        // Set a new array
-        $filtered = [];
+        $transactions = Transaction::query();
+        $transactions = Transaction::where('user_id',auth()->user()->id);
+        $sorted = $this->sorted($transactions);
 
-        // Loop the transactions
-        foreach($sorted as $v)
-        {
-            // Group the transactions into their respective date
-            $filtered[$v['date']][] = $v;
-        }
-
-        // Filter out any date 
-        $filtered = array_filter($filtered, function($v){
-            return count($v) > 1;
-        });
-        // print_r($filtered);
-        return view('back.transactions.transaction', compact('title','filtered','sorted','today'));  
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $budget = $this->budget();
+        return view('back.transactions.index', compact('title','sorted','today','yesterday'));  
     }
 
     /**
@@ -61,22 +37,36 @@ class TranscationController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = validator(request()->all(), [
+
+        $request->validate([
             'title' => 'required',
-            'amount' => 'required'
+            'amount' => 'required',
         ]);
 
-        if($validator->fails()) {
-        return back()->withErrors($validator);
+        if ($request->type_id==3) {
+            $amount = $request->amount - $request->total;
         }
-        // Transaction::create($request->all());
-        $transaction = new Transaction;
-        $transaction->title = request()->title;
-        $transaction->type = request()->type;
-        $transaction->amount = request()->amount;
-        $transaction->date =  Carbon::now()->toDateTimeString();
-        $transaction->user_id = auth()->user()->id;
-        $transaction->save();
+        else {
+            $amount = $request->amount;
+        }
+
+        $isBudget = $this->isBudget($amount,$request->get('category_id'));
+
+        Transaction::create([
+            'title' => $request->get('title'),
+            'type_id'  => $request->get('type_id'),
+            'amount'=> $amount,
+            'isbudget'=> $isBudget,
+            'date'  => Carbon::now()->toDateTimeString(),
+            'category_id'=> $request->get('category_id'),
+            'user_id'=> auth()->user()->id,
+        ]);
+
+        if ($isBudget == false) {
+            alert()->warning('Over Budget',$request->title.' is over budget!');
+        }else{
+            toast('Successfully Create','success');
+        }
 
         return redirect()->route('home.index');
     }
@@ -90,31 +80,13 @@ class TranscationController extends Controller
     public function show($id)
     {
         $transaction = Transaction::where('id',$id)->first();
+
         $title = $transaction['title'];
-        return view('back.transactions.transaction_detail',compact('title','transaction'));   
-    }
+        $amount = $transaction['amount'];
+        $category_id = $transaction['category_id'];
+        $isBudget = $this->isBudget($amount,$category_id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        return view('back.transactions.detail',compact('title','transaction','isBudget'));   
     }
 
     /**
@@ -126,7 +98,64 @@ class TranscationController extends Controller
     public function destroy($id)
     {
         Transaction::where('id',$id)->delete();
-        return redirect()->route('transaction.index');
+
+        toast('Delete Successfully!','success');
+        return redirect()->route('home.index');
     }
     
+    private function sorted($transactions)
+    {
+        $sorted =  (clone $transactions)->orderBy('created_at', 'desc')->get();
+
+        // Set a new array
+        $filtered = [];
+
+        // Loop the transactions
+        foreach($sorted as $v)
+        {
+            // Group the transactions into their respective date
+            $filtered[$v['date']][] = $v;
+        }
+
+        return ['sorted'=>$sorted,'filtered'=>$filtered];
+    }
+
+    private function budget()
+    {
+        $month = Carbon::today()->month;
+        $transactions = Transaction::where('user_id',auth()->user()->id)->whereMonth('date',$month)->latest();
+
+        $adj= (clone $transactions)->where('type_id',3)->sum("amount");
+        $income= (clone $transactions)->where('type_id',1)->sum("amount")+$adj;
+
+        $need = (50/100*$income);
+        $want = (30/100*$income);
+        $saving = (20/100*$income);
+
+        return [
+            'need'=>$need,
+            'want'=>$want,
+            'saving'=>$saving
+        ];
+    }
+
+    private function isBudget($amount,$category_id)
+    {
+        $budget = $this->budget();
+        $isBudget = false;
+
+        if ($category_id == 1 && $amount < $budget['need']) {
+            $isBudget = true;
+        }
+        elseif($category_id == 2 && $amount < $budget['want'] ){
+            $isBudget = true;
+        }
+        elseif($category_id == 3 && $amount < $budget['saving']){
+            $isBudget = true;
+        }else{
+            $isBudget = false;
+        }
+
+        return $isBudget;
+    }
 }

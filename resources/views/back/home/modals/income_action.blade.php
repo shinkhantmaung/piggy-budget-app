@@ -9,7 +9,9 @@
                     <form action="{{ route('transaction.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('POST')
-                        <input type="hidden" name="type" value="income">
+                        <input type="hidden" name="type_id" value=1>
+                        <input type="hidden" name="category_id" value="0">
+
                         <div class="form-group basic">
                             <div class="input-wrapper">
                                 <label class="label" for="text11">Title</label>
@@ -17,17 +19,6 @@
                                 <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                             </div>
                         </div>
-
-                        {{-- <div class="form-group basic">
-                            <div class="input-wrapper">
-                                <label class="label" for="account2">Category</label>
-                                <select class="form-control custom-select" id="account2">
-                                    <option value="0">Savings</option>
-                                    <option value="1">Investment</option>
-                                    <option value="2">Mortgage</option>
-                                </select>
-                            </div>
-                        </div> --}}
 
                         <div class="form-group basic">
                             <label class="label">Enter Amount</label>
@@ -40,8 +31,7 @@
                         </div>
 
                         <div class="form-group basic">
-                            {{-- <button type="submit" class="btn btn-primary btn-block btn-lg">Save</button> --}}
-                            <input type="submit" class="btn btn-primary btn-blovk btn-lg" value="Save">
+                            <button type="submit" class="btn btn-success btn-block btn-lg">Save</button>
                         </div>
                     </form>
                 </div>

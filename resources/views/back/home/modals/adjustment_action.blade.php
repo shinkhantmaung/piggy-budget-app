@@ -6,19 +6,25 @@
             </div>
             <div class="modal-body">
                 <div class="action-sheet-content">
-                    <form>
+                    <form action="{{ route('transaction.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('POST')
+                        <input type="hidden" name="type_id" value=3>
+                        <input type="hidden" name="category_id" value="0">
+                        <input type="hidden" name="total" value="{{$total}}">
+                        <input type="hidden" name="title" value="Adjustment">
+
                         <div class="form-group basic">
                             <label class="label">Enter Amount</label>
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text" id="input1">$</span>
+                                    <span class="input-group-text">$</span>
                                 </div>
-                                <input type="text" class="form-control form-control-lg" value="100">
+                                <input type="number" class="form-control form-control-lg" name="amount">
                             </div>
                         </div>
                        <div class="form-group basic">
-                            <button type="button" class="btn btn-primary btn-block btn-lg"
-                                data-dismiss="modal">Save</button>
+                            <button type="submit" class="btn btn-success btn-block btn-lg">Save</button>
                         </div>
                     </form>
                 </div>

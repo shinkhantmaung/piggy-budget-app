@@ -9,5 +9,19 @@ class Transaction extends Model
 {
     use HasFactory;
     
-    protected $guarded = [];
+    protected $fillable = [
+        'title',
+        'amount',
+        'date',
+        'type_id',
+        'category_id',
+        'user_id',
+        'isbudget'
+    ];
+
+    public function user()
+    {
+        return $this->hasOne(User::class,'id','user_id');
+    }
+
 }

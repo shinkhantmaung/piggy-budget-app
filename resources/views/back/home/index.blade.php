@@ -1,21 +1,7 @@
 @extends('back.layouts.master')
 
 @section('header')
-<div class="appHeader bg-primary text-light">
-    <div class="pageTitle">
-        <img src="assets/img/logo.png" alt="logo" class="logo">
-    </div>
-    <div class="right">
-        <a href="app-notifications.html" class="headerButton">
-            <ion-icon class="icon" name="notifications"></ion-icon>
-            <span class="badge badge-danger">4</span>
-        </a> 
-        {{-- <a href="{{url('settings')}}" class="headerButton">
-            <img src="assets/img/sample/avatar/avatar1.jpg" alt="image" class="imaged w32">
-            <span class="badge badge-danger">6</span>
-        </a> --}}
-    </div>
-</div>
+    @include('back.layouts.header')
 @endsection
 
 @section('content')
@@ -54,15 +40,16 @@
                         </a>
                     </div>
                     <div class="item">
-                        <a href="#">
+                        <a href="#" onclick="return alert()->info('InfoAlert','Lorem ipsum dolor sit amet.');
+                            ">
                             <div class="icon-wrapper bg-secondary">
                                 <ion-icon name="cash-outline"></ion-icon>
                             </div>
-                            <strong>Savings</strong>
+                            <strong>Report</strong>
                         </a>
                     </div>
                     <div class="item">
-                        <a href="bill.html">
+                        <a href="#">
                             <div class="icon-wrapper bg-warning">
                                 <ion-icon name="receipt-outline"></ion-icon>
                             </div>
@@ -95,27 +82,21 @@
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Income</div>
-                        <div class="value text-success">{{number_format($income,2)}} Ks</div>
+                        <div class="value text-success">{{number_format($income)}} Ks</div>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="stat-box">
                         <div class="title">Expenses</div>
-                        <div class="value text-danger">{{number_format($expense,2)}} Ks</div>
+                        <div class="value text-danger">{{number_format($expense)}} Ks</div>
                     </div>
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col-6">
-                    <div class="stat-box">
-                        <div class="title">Total Bills</div>
-                        <div class="value">$ 53.25</div>
-                    </div>
-                </div>
-                <div class="col-6">
+                <div class="col-12">
                     <div class="stat-box">
                         <div class="title">Savings</div>
-                        <div class="value">$ 120.99</div>
+                        <div class="value">{{number_format($saving)}} Ks</div>
                     </div>
                 </div>
             </div>

@@ -9,25 +9,25 @@
                     <form action="{{ route('transaction.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('POST')
-                        <input type="hidden" name="type" value="expense">
+                        <input type="hidden" name="type_id" value=2>
                         <div class="form-group basic">
                             <div class="input-wrapper">
-                                <label class="label" for="text11">Title</label>
+                                <label class="label">Title</label>
                                 <input type="text" class="form-control" name="title" placeholder="Enter title">
                                 <i class="clear-input"><ion-icon name="close-circle"></ion-icon></i>
                             </div>
                         </div>
 
-                        {{-- <div class="form-group basic">
+                        <div class="form-group basic">
                             <div class="input-wrapper">
                                 <label class="label" for="account2">Category</label>
-                                <select class="form-control custom-select" id="account2">
-                                    <option value="0">Savings</option>
-                                    <option value="1">Investment</option>
-                                    <option value="2">Mortgage</option>
+                                <select class="form-control custom-select" name="category_id">
+                                    @foreach ($categories as $category)
+                                        <option value="{{$category['id']}}">{{$category['title']}}</option>
+                                    @endforeach
                                 </select>
                             </div>
-                        </div> --}}
+                        </div>
 
                         <div class="form-group basic">
                             <label class="label">Enter Amount</label>
@@ -42,7 +42,7 @@
                         
 
                         <div class="form-group basic">
-                            <button type="submit" class="btn btn-primary btn-block btn-lg">Save</button>
+                            <button type="submit" class="btn btn-danger btn-block btn-lg">Save</button>
                         </div>
                     </form>
                 </div>

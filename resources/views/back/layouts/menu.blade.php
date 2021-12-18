@@ -1,20 +1,20 @@
-<div class="appBottomMenu">
-    <a href="{{url('/home')}}" class="item active">
+<div class="appBottomMenu bg-light text-dark">
+    <a href="{{url('/transaction')}}" class="item" >
         <div class="col">
-            <ion-icon name="pie-chart-outline"></ion-icon>
-            <strong>Overview</strong>
+            <ion-icon name="time-outline"></ion-icon>
+            <strong>Activity</strong>
         </div>
     </a>
-    <a href="{{url('transaction')}}" class="item">
+    <a href="{{url('/home')}}" class="item active" >
         <div class="col">
-            <ion-icon name="document-text-outline"></ion-icon>
-            <strong>Transcations</strong>
+            <ion-icon name="file-tray-full-outline"></ion-icon>
+            <strong>Today</strong>
         </div>
     </a>
-    <a href="{{url('settings')}}" class="item">
+    <a href="{{url('/budget')}}" class="item" >
         <div class="col">
-            <ion-icon name="menu-outline"></ion-icon>
-            <strong>Settings</strong>
+            <ion-icon name="trending-up-outline"></ion-icon>
+            <strong>Budget</strong>
         </div>
     </a>
 </div>

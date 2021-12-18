@@ -16,10 +16,12 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('type');
             $table->integer('amount');
             $table->date('date');
+            $table->integer('type_id');
+            $table->integer('category_id');
             $table->integer('user_id');
+            $table->boolean('isbudget')->default(0);
             $table->timestamps();
         });
     }

@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TranscationController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TranscationController;
+use App\Http\Controllers\BudgetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,4 +40,8 @@ Route::group(['middleware'=>'auth'],function(){
     Route::get('/settings',function(){
         return view('back.settings.index');
     });
+
+    //Budget
+    Route::get('/budget',[BudgetController::class,'index']);   
+    Route::get('/budget/{category}',[BudgetController::class,'show'])->name('budget.show');   
 });
