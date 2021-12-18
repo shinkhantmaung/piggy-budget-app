@@ -62,7 +62,7 @@ class TranscationController extends Controller
             'user_id'=> auth()->user()->id,
         ]);
 
-        if ($isBudget == false) {
+        if ($isBudget == false && $request->type_id == 2) {
             alert()->warning('Over Budget',$request->title.' is over budget!');
         }else{
             toast('Successfully Create','success');
