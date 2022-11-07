@@ -1,1 +1,1 @@
-<img src="https://www.shinkhant.xyz/assets/portfolio/piggy_info.png" width="auto">
+<img src="https://shinkhant.netlify.app/assets/portfolio/piggy_info.png" width="auto">
